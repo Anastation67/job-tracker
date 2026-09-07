@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D5C63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vacancy Hub">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%230D5C63'/%3E%3Crect x='28' y='96' width='6' height='34' fill='%23E6E9EC'/%3E%3Crect x='58' y='80' width='6' height='50' fill='%23E6E9EC'/%3E%3Crect x='88' y='58' width='6' height='72' fill='%23E6E9EC'/%3E%3Crect x='118' y='40' width='6' height='90' fill='%23E6E9EC'/%3E%3Crect x='146' y='30' width='6' height='100' fill='%23E6E9EC'/%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Vacancy%20Hub%22%2C%22short_name%22%3A%22Vacancy%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23E6E9EC%22%2C%22theme_color%22%3A%22%230D5C63%22%2C%22start_url%22%3A%22.%22%7D">
+<title>Vacancy Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Archivo:ital,wdth,wght@0,75..125,400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F1E8;
+  --surface:#FFFFFF;
+  --surface-2:#F0E6D8;
+  --ink:#2E2721;
+  --ink-soft:#8C7F70;
+  --line:#E6DAC7;
+  --teal:#B2552F;
+  --teal-deep:#8A3F22;
+  --teal-wash:#F3E1D2;
+  --rose:#A8483D;
+  --amber:#8A5A00;
+  --focus:#B2552F;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:-0.01em;line-height:1.15}
+h1{font-size:clamp(30px,5vw,44px)}
+h2{font-size:23px}
+h3{font-size:16px}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+a{color:var(--teal)}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 96px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:var(--paper);border-bottom:1px solid var(--line);
+}
+.topbar-in{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:baseline;gap:9px;background:none;border:0;padding:0}
+.brand b{font-family:'Fraunces',serif;font-weight:600;font-size:19px;letter-spacing:-0.01em}
+.brand span{font-size:12px;color:var(--ink-soft)}
+.crumbs{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+.crumb{
+  background:none;border:1px solid transparent;border-radius:8px;
+  padding:6px 12px;font-size:13px;color:var(--ink-soft);
+}
+.crumb:hover{background:var(--surface-2)}
+.crumb[aria-current="page"]{background:var(--teal);border-color:var(--teal);color:#fff}
+
+/* ---------- hero ---------- */
+.hero{padding:38px 0 30px;border-bottom:1px solid var(--line)}
+.hero-top{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;margin-bottom:28px}
+.hero-count{font-family:'Fraunces',serif;font-size:clamp(48px,10vw,80px);font-weight:600;line-height:0.9;letter-spacing:-0.02em}
+.hero-note{color:var(--ink-soft);font-size:14px;max-width:46ch;padding-bottom:8px}
+.hero-note b{color:var(--ink);font-weight:600}
+
+/* ---------- plates ---------- */
+.plates{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:12px;margin-top:32px}
+.plate{
+  text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:20px 20px 18px;display:flex;flex-direction:column;gap:6px;min-height:112px;
+  box-shadow:0 1px 2px rgba(46,39,33,.04);transition:box-shadow .15s,transform .15s;
+}
+.plate:hover{box-shadow:0 4px 14px rgba(46,39,33,.08);transform:translateY(-1px)}
+.plate-n{font-family:'Fraunces',serif;font-size:34px;font-weight:600;line-height:1}
+.plate-t{font-weight:600;font-size:15px}
+.plate-d{font-size:13px;color:var(--ink-soft);margin-top:auto}
+.plate.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.plate.primary .plate-d{color:#F4DDCC}
+.plate.primary:hover{background:var(--teal-deep);border-color:var(--teal-deep)}
+
+/* ---------- generic ---------- */
+.section{padding:30px 0}
+.section-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.section-head p{color:var(--ink-soft);font-size:14px;flex:1 1 260px}
+.btn{
+  background:var(--teal);color:#fff;border:1px solid var(--teal);
+  border-radius:9px;padding:10px 17px;font-weight:600;font-size:14px;
+  transition:background .15s;
+}
+.btn:hover{background:var(--teal-deep);border-color:var(--teal-deep)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface-2);border-color:var(--ink-soft)}
+.btn.small{padding:6px 12px;font-size:13px;font-weight:500}
+textarea,input,select{
+  font:inherit;width:100%;background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:9px;padding:10px 13px;
+}
+textarea:focus,input:focus,select:focus{border-color:var(--teal)}
+textarea{min-height:170px;resize:vertical;line-height:1.5;font-size:14px}
+label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:5px}
+.field{margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+
+/* ---------- segmented control ---------- */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{
+  background:var(--surface);border:0;padding:7px 13px;font-size:13px;color:var(--ink-soft);
+  border-right:1px solid var(--line);
+}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+
+/* ---------- filters ---------- */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.filter-bar .search{margin-bottom:0;flex:1 1 220px}
+.filter-bar select{width:auto;min-width:170px;flex:0 0 auto}
+.search{position:relative;margin-bottom:14px;max-width:420px}
+.search input{padding-left:34px}
+.search::before{
+  content:"⌕";position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--ink-soft);font-size:15px;pointer-events:none;
+}
+
+/* ---------- job rows ---------- */
+.jobs{display:flex;flex-direction:column;gap:8px}
+.job{
+  border:1px solid var(--line);border-radius:12px;background:var(--surface);
+  box-shadow:0 1px 2px rgba(46,39,33,.03);overflow:hidden;
+}
+.job-head{
+  display:grid;grid-template-columns:22px 48px 1fr auto;gap:14px;align-items:start;
+  padding:15px 16px;cursor:pointer;
+}
+.job-head:hover{background:var(--surface-2);border-radius:12px}
+.job-check{padding-top:3px}
+.job-check input{width:16px;height:16px;padding:0;cursor:pointer}
+.score{font-family:'Fraunces',serif;font-size:21px;font-weight:600;line-height:1.1;padding-top:1px}
+.score small{display:block;font-family:'Archivo',sans-serif;font-size:10px;font-weight:400;color:var(--ink-soft);letter-spacing:.02em}
+.job-title{font-weight:600;font-size:15.5px}
+.job-title a{text-decoration:none;color:inherit;border-bottom:1px solid var(--line)}
+.job-title a:hover{border-bottom-color:var(--teal);color:var(--teal)}
+.job-meta{font-size:13px;color:var(--ink-soft);margin-top:3px}
+.chevron{
+  background:none;border:0;color:var(--ink-soft);font-size:13px;padding:4px 6px;
+  transition:transform .15s;
+}
+.job.expanded .chevron{transform:rotate(90deg)}
+.job-body{padding:0 16px 18px 84px;display:none}
+.job.expanded .job-body{display:block}
+.job-why{font-size:13.5px;max-width:72ch}
+.gaps{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.gap{
+  font-size:11.5px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:6px;padding:3px 8px;color:var(--ink-soft);
+}
+.gap.have{background:var(--teal-wash);border-color:#E0BC9E;color:var(--teal-deep)}
+.job-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pill{
+  font-size:11.5px;border:1px solid var(--line);border-radius:6px;padding:2px 8px;
+  background:var(--surface);color:var(--ink-soft);
+}
+.pill.src{background:var(--surface-2)}
+.pill.urgent{border-color:var(--rose);color:var(--rose)}
+.pill.conf-low{border-style:dashed;color:#A6988A}
+.pill.conf-medium{border-color:#C9B79E}
+.pill.conf-high{background:var(--teal-wash);border-color:#E0BC9E;color:var(--teal-deep)}
+.score.provisional{opacity:.7}
+.score.provisional small{font-style:italic}
+
+/* ---------- status & notes ---------- */
+.status-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.stat-btn{
+  font-size:12px;border:1px solid var(--line);background:var(--surface);
+  border-radius:7px;padding:4px 10px;color:var(--ink-soft);
+}
+.stat-btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.note-field{margin-top:10px}
+.note-field textarea{min-height:56px;font-size:13.5px}
+.applied-date{font-size:12px;color:var(--ink-soft);margin-top:6px}
+
+/* ---------- bulk bar ---------- */
+.bulkbar{
+  display:flex;align-items:center;gap:10px;background:var(--teal-wash);
+  border:1px solid #E0BC9E;border-radius:10px;padding:9px 14px;margin-bottom:12px;
+  font-size:13px;color:var(--teal-deep);
+}
+.bulkbar b{margin-right:auto}
+
+/* ---------- misc ---------- */
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.log{
+  font-size:12.5px;color:var(--ink-soft);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:9px;padding:11px 13px;
+  max-height:150px;overflow:auto;margin-top:14px;white-space:pre-wrap;
+}
+.empty{
+  border:1px dashed var(--line);border-radius:12px;padding:38px 22px;
+  text-align:center;color:var(--ink-soft);font-size:14px;background:var(--surface);
+}
+.empty b{display:block;font-family:'Fraunces',serif;color:var(--ink);font-size:17px;font-weight:600;margin-bottom:6px}
+.err{border:1px solid var(--rose);background:#F7E6E3;color:var(--rose);padding:11px 13px;border-radius:9px;font-size:13.5px;margin-bottom:14px}
+.hidden{display:none !important}
+.co-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.co{
+  font-size:12.5px;background:var(--surface);border:1px solid var(--line);
+  border-radius:7px;padding:4px 10px;display:flex;gap:6px;align-items:center;
+}
+.co button{background:none;border:0;padding:0;color:var(--ink-soft);font-size:14px;line-height:1}
+.co button:hover{color:var(--rose)}
+.foot{border-top:1px solid var(--line);margin-top:44px;padding-top:20px;font-size:12.5px;color:var(--ink-soft);max-width:70ch}
+
+@media (max-width:640px){
+  .job-head{grid-template-columns:18px 36px 1fr auto;gap:10px}
+  .job-body{padding-left:64px}
+  .crumbs{width:100%;margin-left:0;overflow-x:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <button class="brand" onclick="go('hub')">
+      <b>Vacancy Hub</b><span id="brandWho">London</span>
+    </button>
+    <nav class="crumbs" id="crumbs"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ HUB ============ -->
+<section id="v-hub">
+  <div class="bar" id="hubLinks" style="margin-top:18px;margin-bottom:4px"></div>
+
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-count mono" id="heroCount">0</div>
+      <p class="hero-note" id="heroNote">Пока пусто. Вставь JSON, который выдал чат проекта, во «Входящих».</p>
+    </div>
+  </div>
+
+  <div class="plates">
+    <button class="plate primary" onclick="go('inbox')">
+      <div class="plate-n mono" id="pInbox">0</div>
+      <div class="plate-t">Входящие</div>
+      <div class="plate-d">Импортировать JSON из чата проекта</div>
+    </button>
+    <button class="plate" onclick="go('shortlist')">
+      <div class="plate-n mono" id="pShort">0</div>
+      <div class="plate-t">Шортлист</div>
+      <div class="plate-d">Сохранённые и отправленные заявки</div>
+    </button>
+    <button class="plate" onclick="go('profile')">
+      <div class="plate-n mono" id="pSkillCount">0</div>
+      <div class="plate-t">Профиль</div>
+      <div class="plate-d">Навыки и цели, зафиксированные в инструкции проекта</div>
+    </button>
+    <button class="plate" onclick="go('companies')">
+      <div class="plate-n mono" id="pCos">0</div>
+      <div class="plate-t">Компании</div>
+      <div class="plate-d">Список для скана — промпт для чата собирается здесь</div>
+    </button>
+  </div>
+</section>
+
+<!-- ============ INBOX ============ -->
+<section id="v-inbox" class="section hidden">
+  <div class="section-head">
+    <h2>Входящие</h2>
+    <p>Вставь JSON-массив, который вернул чат проекта.</p>
+  </div>
+  <div id="inboxErr"></div>
+  <div class="field">
+    <label for="pasteBox">JSON из чата</label>
+    <textarea id="pasteBox" placeholder="[{&quot;title&quot;: ... }] — вставь сюда весь массив, или содержимое файла резервной копии."></textarea>
+  </div>
+  <div class="bar">
+    <span style="font-size:13px;color:var(--ink-soft)">Пометить как:</span>
+    <div class="seg" role="group" aria-label="Метка источника при импорте">
+      <button id="srcMail" aria-pressed="true" onclick="setImportSource('mail')">Почта</button>
+      <button id="srcWeb" aria-pressed="false" onclick="setImportSource('web')">Веб-поиск</button>
+    </div>
+  </div>
+  <div class="bar">
+    <button class="btn" onclick="importJSON()">Импортировать</button>
+    <button class="btn ghost small" onclick="clearPaste()">Очистить поле</button>
+  </div>
+  <div class="log hidden" id="inboxLog"></div>
+
+  <div class="bar" style="margin-top:22px">
+    <button class="btn ghost" onclick="copyAllForRescore(this)">Скопировать список для переоценки</button>
+  </div>
+  <p style="font-size:13px;color:var(--ink-soft);max-width:60ch;margin-bottom:22px">
+    Берёт все вакансии, кроме скрытых, закрытых и отклонённых — их переоценивать незачем. Вставь
+    в чат проекта, получишь обновлённый JSON, импортируй его обратно сюда же.
+  </p>
+
+  <div class="filter-bar">
+    <div class="search">
+      <input id="inboxSearch" placeholder="Фильтр по названию…" oninput="render()">
+    </div>
+    <select id="inboxCompany" onchange="render()">
+      <option value="">Все компании</option>
+    </select>
+    <input id="inboxMinFit" type="number" min="0" max="100" placeholder="Мин. скор"
+           style="max-width:110px" oninput="render()">
+  </div>
+  <div style="font-size:13px;color:var(--ink-soft);margin:-4px 0 14px" id="inboxCount"></div>
+  <div id="inboxBulk"></div>
+  <div class="jobs" id="inboxList"></div>
+</section>
+
+<!-- ============ SHORTLIST ============ -->
+<section id="v-shortlist" class="section hidden">
+  <div class="section-head">
+    <h2>Шортлист</h2>
+    <p>Статус меняется кнопками под вакансией. Заметки сохраняются при уходе из поля.</p>
+  </div>
+  <div class="bar">
+    <span style="font-size:13px;color:var(--ink-soft)">Статус:</span>
+    <div class="seg" id="shortStatusSeg" role="group" aria-label="Фильтр по статусу"></div>
+  </div>
+  <div class="filter-bar">
+    <div class="search">
+      <input id="shortSearch" placeholder="Фильтр по названию…" oninput="render()">
+    </div>
+    <select id="shortCompany" onchange="render()">
+      <option value="">Все компании</option>
+    </select>
+    <input id="shortMinFit" type="number" min="0" max="100" placeholder="Мин. скор"
+           style="max-width:110px" oninput="render()">
+  </div>
+  <div class="jobs" id="shortList"></div>
+</section>
+
+<!-- ============ PROFILE ============ -->
+<section id="v-profile" class="section hidden">
+  <div class="section-head">
+    <h2>Профиль</h2>
+    <p>Справочно: сама оценка идёт по инструкции проекта в чате, это поле её не подменяет.
+       Держи их синхронно, если меняешь одно.</p>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="field">
+        <label for="pName">Имя</label>
+        <input id="pName">
+      </div>
+      <div class="field">
+        <label for="pRoles">Целевые роли, через запятую</label>
+        <input id="pRoles">
+      </div>
+      <div class="field">
+        <label for="pLoc">Локация и формат</label>
+        <input id="pLoc">
+      </div>
+      <div class="field">
+        <label for="pIntake">Интейк и сроки</label>
+        <input id="pIntake">
+      </div>
+    </div>
+    <div>
+      <div class="field">
+        <label for="pSkills">Навыки, через запятую</label>
+        <textarea id="pSkills" style="min-height:96px"></textarea>
+      </div>
+      <div class="field">
+        <label for="pEdu">Образование</label>
+        <textarea id="pEdu" style="min-height:78px"></textarea>
+      </div>
+      <div class="field">
+        <label for="pAvoid">Что не показывать</label>
+        <textarea id="pAvoid" style="min-height:78px" placeholder="Senior-роли, unpaid, вакансии без визовой поддержки…"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label>Быстрые ссылки</label>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">
+      Появляются кнопками на «Главной». Ссылку с «диск» или «drive» в названии приложение
+      само откроет, когда ты впервые отметишь вакансию как «подаюсь» — в момент решения,
+      а не когда уже отправила.
+    </p>
+    <div id="linksEditor"></div>
+    <button class="btn ghost small" onclick="addLink()">Добавить ссылку</button>
+  </div>
+  <div class="field">
+    <label for="pBackend">Адрес бэкенда, если уже поднят</label>
+    <input id="pBackend" placeholder="https://…  — оставь пустым, пока бэкенда нет">
+  </div>
+  <button class="btn" onclick="saveProfile()">Сохранить профиль</button>
+  <button class="btn ghost" onclick="exportBackup()">Скачать резервную копию</button>
+  <span id="profSaved" style="margin-left:12px;font-size:13px;color:var(--teal)"></span>
+</section>
+
+<!-- ============ COMPANIES ============ -->
+<section id="v-companies" class="section hidden">
+  <div class="section-head">
+    <h2>Компании</h2>
+    <p>Список, по которому просишь чат проверить сайты. Разбор всё равно идёт в чате —
+       здесь только список и готовый текст запроса.</p>
+  </div>
+  <div class="field">
+    <label for="coAdd">Добавить: по одной в строке или через запятую</label>
+    <textarea id="coAdd" style="min-height:88px" placeholder="Revolut, Monzo, Wise…"></textarea>
+  </div>
+  <div class="bar">
+    <button class="btn" onclick="addCompanies()">Добавить</button>
+    <button class="btn ghost small" onclick="replaceCompanies()">Заменить весь список</button>
+  </div>
+  <div class="co-list" id="coList"></div>
+  <div class="bar" style="margin-top:20px">
+    <button class="btn ghost" id="copyPromptBtn" onclick="copyCompanyPrompt(this)">Скопировать промпт для поиска</button>
+  </div>
+  <p style="font-size:13px;color:var(--ink-soft);max-width:60ch">
+    Вставь в чат проекта. Результат — обратно сюда: «Входящие» → источник «Веб-поиск» → «Импортировать».
+  </p>
+</section>
+
+<div class="foot" id="foot"></div>
+</main>
+
+<script>
+/* Ловушка на любые необработанные ошибки — показывает файл и строку. */
+(function(){
+  function show(what, where){
+    var box = document.getElementById("crashBox");
+    if(!box){
+      box = document.createElement("div");
+      box.id = "crashBox";
+      box.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:99;background:#9B2C4F;color:#fff;" +
+        "font:12px/1.45 ui-monospace,monospace;padding:10px 40px 10px 12px;max-height:38vh;overflow:auto;white-space:pre-wrap";
+      var x = document.createElement("button");
+      x.textContent = "×";
+      x.style.cssText = "position:absolute;top:6px;right:10px;background:none;border:0;color:#fff;font-size:20px;cursor:pointer";
+      x.onclick = function(){ box.remove(); };
+      box.appendChild(x);
+      document.body.appendChild(box);
+    }
+    box.appendChild(document.createTextNode(what + "\n  " + where + "\n"));
+  }
+  window.addEventListener("error", function(e){
+    show(e.message, (e.filename || "?") + " : строка " + e.lineno + ", символ " + e.colno);
+  });
+  window.addEventListener("unhandledrejection", function(e){
+    var r = e.reason || {};
+    show("Promise: " + (r.message || r), (r.stack || "стека нет").split("\n").slice(0,3).join("\n  "));
+  });
+})();
+</script>
+<script>
+/* ============================================================
+   Vacancy Hub — единый файл, без сборки.
+   Оценка вакансий происходит в чате проекта, по его инструкции.
+   Это приложение только хранит результат: дедуп, статусы, заметки.
+   Хранилище: window.storage (артефакт) → localStorage (хостинг).
+   ============================================================ */
+
+const KEY = "vhub:state";
+
+const SEED_COMPANIES = [
+  "Revolut","Monzo","Wise","Starling Bank","Checkout.com","Marshmallow","Cleo",
+  "Man Group","G-Research","Jane Street","Citadel","Point72","Balyasny","Squarepoint",
+  "Goldman Sachs","J.P. Morgan","Barclays","HSBC","NatWest","Schroders","Legal & General",
+  "DeepMind","Google","Meta","Amazon","Microsoft","Palantir","Databricks","Snowflake",
+  "Spotify","Bloomberg","Expedia","Booking.com","Deliveroo","Depop","Trainline",
+  "McKinsey","BCG","Bain","QuantumBlack","Deloitte","PwC","EY","KPMG","Accenture",
+  "BAE Systems","Rolls-Royce","QinetiQ","Leonardo UK","Sky","BBC","ITV","Financial Times",
+  "Ofcom","Bank of England","ONS","NHS England","Tesco","Sainsbury's","Ocado Technology"
+];
+
+const DEFAULT_PROFILE = {
+  name: "Профиль",
+  roles: "Junior Data Scientist, Data Analyst, Machine Learning Engineer, Quantitative Analyst",
+  location: "Лондон; гибрид или офис; удалённо по UK тоже подходит",
+  intake: "Graduate intake 2027 — основная цель; открыта к позициям со стартом в 2026",
+  skills: "Python, PySpark, SQL, R, PyTorch, LaTeX, GCP, BigQuery, pandas, scikit-learn, статистика, панельные регрессии, эконометрика",
+  education: "Заполни своё образование в разделе «Профиль»",
+  avoid: "Senior и Lead позиции, роли с 3+ годами обязательного опыта, неоплачиваемые стажировки, вакансии вне UK",
+  backend: ""
+};
+
+const DEFAULT_LINKS = [
+  {label: "Google Диск", url: "https://drive.google.com/drive/u/0/folders/1K0brOpMTWUeRZkpCcTjyL1qd4iMVefks"},
+  {label: "Google-таблица (статусы)", url: ""},
+  {label: "Apps Script (сбор писем)",
+   url: "https://script.google.com/u/1/home/projects/1RZ-IxuRWUVFrueXVPmFUN4wkOn1JqjvUdKVKF4lj1vA6LAScNiaQxwLq/edit"}
+];
+
+const STATUS_LABELS = {
+  new: "добавлена", saved: "сохранено", applying: "подаюсь", applied: "подана",
+  interview: "интервью", rejected: "отказ", closed: "закрыта"
+};
+function capFirst(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+let S = {
+  profile: {...DEFAULT_PROFILE},
+  companies: [...SEED_COMPANIES],
+  links: DEFAULT_LINKS.map(l => ({...l})),
+  jobs: []
+};
+
+// Состояние экрана — не персистится, сбрасывается при перезагрузке.
+let importSource = "mail";
+let expanded = new Set();
+let selected = new Set();
+let shortStatusFilter = ""; // "" — все статусы
+
+/* ---------------- storage ---------------- */
+let syncState = "local";
+
+function base(){ return (S.profile.backend||"").trim().replace(/\/$/,""); }
+
+async function localGet(){
+  if(window.storage){
+    const r = await window.storage.get(KEY);
+    return r && r.value ? JSON.parse(r.value) : null;
+  }
+  const raw = localStorage.getItem(KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+async function localSet(payload){
+  if(window.storage) await window.storage.set(KEY, payload);
+  else localStorage.setItem(KEY, payload);
+}
+
+async function load(){
+  let local = null;
+  try{ local = await localGet(); }catch(e){ /* первый запуск */ }
+  if(local) S = {...S, ...local};
+
+  if(base()){
+    try{
+      const r = await fetch(base() + "/state");
+      if(r.ok){
+        const remote = await r.json();
+        if(remote && remote.saved && (!local || !local.saved || remote.saved >= local.saved)){
+          S = {...S, ...remote};
+          syncState = "с сервера";
+        } else {
+          syncState = "локальная копия свежее";
+        }
+      } else { syncState = "сервер вернул " + r.status; }
+    }catch(e){ syncState = "сервер недоступен"; }
+  }
+
+  S.profile = {...DEFAULT_PROFILE, ...(S.profile||{})};
+  if(!Array.isArray(S.companies) || !S.companies.length) S.companies = [...SEED_COMPANIES];
+  if(!Array.isArray(S.links)) S.links = DEFAULT_LINKS.map(l => ({...l}));
+  if(!Array.isArray(S.jobs)) S.jobs = [];
+
+  // Переход со старой схемы (три отдельные даты) на единый лог статусов —
+  // ничего из уже записанного не теряется.
+  S.jobs.forEach(j => {
+    if(Array.isArray(j.statusLog)) return;
+    const log = [{status: "new", at: j.found || Date.now()}];
+    if(j.applyingAt) log.push({status: "applying", at: j.applyingAt});
+    if(j.appliedAt)  log.push({status: "applied",  at: j.appliedAt});
+    if(j.rejectedAt) log.push({status: "rejected", at: j.rejectedAt});
+    log.sort((a, b) => a.at - b.at);
+    j.statusLog = log;
+  });
+}
+
+let pushTimer = null;
+async function save(){
+  S.saved = Date.now();
+  const payload = JSON.stringify(S);
+  try{ await localSet(payload); }
+  catch(e){ console.error("Локально не сохранилось:", e); }
+
+  if(!base()) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(async () => {
+    try{
+      const r = await fetch(base() + "/state", {
+        method:"PUT", headers:{"Content-Type":"application/json"}, body: payload
+      });
+      syncState = r.ok ? "синхронизировано " + new Date().toLocaleTimeString("ru-RU") : "не записалось, " + r.status;
+    }catch(e){ syncState = "запись не прошла"; }
+    render();
+  }, 1500);
+}
+
+/* ---------------- clipboard ---------------- */
+async function copyText(text, btn, doneLabel){
+  const original = btn ? btn.textContent : null;
+  try{
+    if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("нет clipboard API");
+    await navigator.clipboard.writeText(text);
+    if(btn){
+      btn.textContent = doneLabel || "Скопировано ✓";
+      setTimeout(() => { btn.textContent = original; }, 1600);
+    }
+  }catch(e){
+    // Автоматическое копирование здесь часто блокируется песочницей артефакта.
+    // Запасной путь — окно с уже выделенным текстом, Cmd+C сработает всегда.
+    showCopyFallback(text);
+    if(btn) btn.textContent = original;
+  }
+}
+function showCopyFallback(text){
+  const overlay = document.createElement("div");
+  overlay.style.cssText =
+    "position:fixed;inset:0;background:rgba(46,39,33,.5);z-index:200;" +
+    "display:flex;align-items:center;justify-content:center;padding:20px";
+  overlay.onclick = (e) => { if(e.target === overlay) overlay.remove(); };
+
+  const box = document.createElement("div");
+  box.style.cssText =
+    "background:var(--surface);border-radius:12px;padding:18px;max-width:600px;" +
+    "width:100%;max-height:80vh;display:flex;flex-direction:column;gap:10px;" +
+    "box-shadow:0 10px 32px rgba(46,39,33,.25)";
+
+  const label = document.createElement("p");
+  label.style.cssText = "font-size:13.5px;color:var(--ink-soft)";
+  label.textContent = "Браузер не разрешил скопировать напрямую. Текст ниже уже выделен — нажми Cmd+C (или Ctrl+C), потом закрой это окно.";
+
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.readOnly = true;
+  ta.style.cssText = "flex:1;min-height:260px;font-family:ui-monospace,monospace;font-size:12.5px";
+
+  const close = document.createElement("button");
+  close.className = "btn"; close.textContent = "Закрыть";
+  close.style.alignSelf = "flex-start";
+  close.onclick = () => overlay.remove();
+
+  box.append(label, ta, close);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  ta.focus();
+  ta.select();
+}
+
+/* ---------------- import parsing ---------------- */
+function parseJSON(text){
+  let t = (text||"").replace(/```json/gi,"").replace(/```/g,"").trim();
+  const a = t.indexOf("["), b = t.lastIndexOf("]");
+  if(a !== -1 && b > a) t = t.slice(a, b+1);
+  try{ return JSON.parse(t); }catch(e){ return []; }
+}
+
+/* ---------------- job helpers ---------------- */
+function normKey(j){
+  return ((j.company||"") + "|" + (j.title||"")).toLowerCase().replace(/[^a-zа-я0-9|]/gi,"");
+}
+function addJobs(list, source){
+  let added = 0, updated = 0;
+  const byKey = new Map(S.jobs.map(j => [normKey(j), j]));
+  for(const raw of list){
+    if(!raw || !raw.title || !raw.company) continue;
+    const conf = ["low","medium","high"].includes(raw.confidence) ? raw.confidence : "low";
+    const fields = {
+      location: raw.location || "",
+      url: /^https?:\/\//.test(raw.url||"") ? raw.url : "",
+      deadline: raw.deadline || "",
+      salary: raw.salary || "",
+      fit: Math.max(0, Math.min(100, parseInt(raw.fit,10) || 0)),
+      confidence: conf,
+      why: raw.why || "",
+      have: Array.isArray(raw.have) ? raw.have.slice(0,3) : [],
+      gaps: Array.isArray(raw.gaps) ? raw.gaps.slice(0,3) : []
+    };
+    const j = {
+      id: "j" + Date.now() + Math.random().toString(36).slice(2,7),
+      title: String(raw.title).slice(0,140),
+      company: String(raw.company).slice(0,80),
+      note: "", statusLog: [{status: "new", at: Date.now()}],
+      ...fields,
+      source, status: "new", found: Date.now()
+    };
+    const k = normKey(j);
+    const existing = byKey.get(k);
+
+    if(existing){
+      let touched = false;
+      // Явный сигнал «вакансия закрыта» из массовой переоценки — можно ставить всегда.
+      if(raw.status === "closed" && existing.status !== "closed"){
+        existing.status = "closed";
+        touched = true;
+      }
+      // Обновляем оценку при том же уровне уверенности или выше — так работает
+      // и апгрейд первого прохода вторым, и обычное обновление после переоценки.
+      // Никогда не откатываем high обратно к low или medium.
+      const rank = {low:0, medium:1, high:2};
+      if(rank[conf] >= rank[existing.confidence || "low"]){
+        Object.assign(existing, fields);
+        touched = true;
+      }
+      if(touched) updated++;
+      continue;
+    }
+    byKey.set(k, j); S.jobs.push(j); added++;
+  }
+  return {added, updated};
+}
+function scoreColor(f){
+  if(f >= 75) return "var(--teal-deep)";
+  if(f >= 55) return "var(--teal)";
+  if(f >= 40) return "var(--ink-soft)";
+  return "#98A2AC";
+}
+function matches(j, q){
+  if(!q) return true;
+  const s = (j.title + " " + j.company).toLowerCase();
+  return s.includes(q.trim().toLowerCase());
+}
+function findLink(keyword){
+  const l = S.links.find(x => x.url && x.label.toLowerCase().includes(keyword));
+  return l ? l.url : null;
+}
+function driveUrl(){ return findLink("диск") || findLink("drive"); }
+function fillCompanyOptions(selectId, list){
+  const el = document.getElementById(selectId);
+  if(!el) return "";
+  const current = el.value;
+  const names = [...new Set(list.map(j => j.company))].sort((a,b) => a.localeCompare(b, "ru"));
+  el.innerHTML = '<option value="">Все компании</option>' +
+    names.map(c => '<option' + (c === current ? ' selected' : '') + '>' + esc(c) + '</option>').join("");
+  // Если выбранная компания пропала из списка (все её вакансии скрыты) — сбрасываем на «Все».
+  return names.includes(current) ? current : "";
+}
+
+/* ---------------- rendering ---------------- */
+function rescorePrompt(j){
+  return "Второй проход:\n" + j.title + " — " + j.company +
+    (j.url ? "\n" + j.url : "") +
+    "\n\n(вставь сюда текст со страницы вакансии, и я пересчитаю оценку по правилам проекта)";
+}
+
+function jobRow(j, ctx){
+  const el = document.createElement("div");
+  el.className = "job" + (expanded.has(j.id) ? " expanded" : "");
+
+  const head = document.createElement("div");
+  head.className = "job-head";
+  head.onclick = (e) => {
+    if(e.target.closest("a,button,input,textarea")) return;
+    expanded.has(j.id) ? expanded.delete(j.id) : expanded.add(j.id);
+    render();
+  };
+
+  const chk = document.createElement("div");
+  chk.className = "job-check";
+  if(ctx === "inbox"){
+    const box = document.createElement("input");
+    box.type = "checkbox";
+    box.checked = selected.has(j.id);
+    box.setAttribute("aria-label", "Выбрать " + j.title);
+    box.onclick = (e) => {
+      e.stopPropagation();
+      selected.has(j.id) ? selected.delete(j.id) : selected.add(j.id);
+      render();
+    };
+    chk.appendChild(box);
+  }
+
+  const sc = document.createElement("div");
+  sc.className = "score mono" + ((j.confidence || "low") === "low" ? " provisional" : "");
+  sc.style.color = scoreColor(j.fit);
+  sc.innerHTML = j.fit + "<small>" + ((j.confidence || "low") === "high" ? "fit" : "предв.") + "</small>";
+
+  const mid = document.createElement("div");
+  const t = document.createElement("div");
+  t.className = "job-title";
+  t.innerHTML = j.url
+    ? '<a href="' + j.url + '" target="_blank" rel="noopener">' + esc(j.title) + '</a>'
+    : esc(j.title);
+  mid.appendChild(t);
+
+  const meta = document.createElement("div");
+  meta.className = "job-meta";
+  const bits = [esc(j.company)];
+  if(j.location) bits.push(esc(j.location));
+  if(j.salary) bits.push(esc(j.salary));
+  const conf = j.confidence || "low";
+  const confLabel = {low:"только из письма", medium:"частично", high:"по описанию"}[conf];
+  meta.innerHTML = bits.join(" — ") +
+    (j.deadline ? ' <span class="pill urgent">до ' + esc(j.deadline) + '</span>' : '') +
+    ' <span class="pill conf-' + conf + '">' + confLabel + '</span>' +
+    ' <span class="pill src">' + (j.source === "mail" ? "из почты" : "найдено в сети") + '</span>';
+  mid.appendChild(meta);
+
+  const chev = document.createElement("button");
+  chev.className = "chevron"; chev.textContent = "▸";
+  chev.setAttribute("aria-label", "Показать подробности");
+
+  head.append(chk, sc, mid, chev);
+
+  const body = document.createElement("div");
+  body.className = "job-body";
+
+  if(j.why){
+    const w = document.createElement("p");
+    w.className = "job-why"; w.textContent = j.why; body.appendChild(w);
+  }
+  if(j.have.length || j.gaps.length){
+    const g = document.createElement("div");
+    g.className = "gaps";
+    j.have.forEach(h => g.insertAdjacentHTML("beforeend", '<span class="gap have">' + esc(h) + '</span>'));
+    j.gaps.forEach(x => g.insertAdjacentHTML("beforeend", '<span class="gap">' + esc(x) + '</span>'));
+    body.appendChild(g);
+  }
+
+  if(ctx === "short"){
+    const row = document.createElement("div");
+    row.className = "status-row";
+    ["saved","applying","applied","interview","rejected","closed"].forEach(st => {
+      const b = document.createElement("button");
+      b.className = "stat-btn";
+      b.textContent = STATUS_LABELS[st];
+      b.setAttribute("aria-pressed", j.status === st ? "true" : "false");
+      b.onclick = () => setStatus(j.id, st);
+      row.appendChild(b);
+    });
+    body.appendChild(row);
+
+    if(j.statusLog && j.statusLog.length){
+      const log = document.createElement("div");
+      log.className = "status-log";
+      j.statusLog.forEach(entry => {
+        const line = document.createElement("div");
+        line.className = "applied-date";
+        line.textContent = capFirst(STATUS_LABELS[entry.status] || entry.status) +
+          ": " + new Date(entry.at).toLocaleDateString("ru-RU");
+        log.appendChild(line);
+      });
+      body.appendChild(log);
+    }
+
+    const noteWrap = document.createElement("div");
+    noteWrap.className = "note-field";
+    const noteLabel = document.createElement("label");
+    noteLabel.textContent = "Заметка";
+    const noteArea = document.createElement("textarea");
+    noteArea.value = j.note || "";
+    noteArea.placeholder = "Что написала, кто контакт, следующий шаг…";
+    noteArea.onblur = () => saveNote(j.id, noteArea.value);
+    noteWrap.append(noteLabel, noteArea);
+    body.appendChild(noteWrap);
+  }
+
+  const acts = document.createElement("div");
+  acts.className = "job-acts";
+  if(ctx !== "short"){
+    acts.appendChild(mkBtn("В шортлист", () => setStatus(j.id, "saved")));
+    acts.appendChild(mkBtn("Скрыть", () => setStatus(j.id, "hidden"), true));
+  } else {
+    acts.appendChild(mkBtn("Убрать", () => setStatus(j.id, "hidden"), true));
+    const d = driveUrl();
+    if(d) acts.appendChild(mkBtn("Открыть Диск", () => window.open(d, "_blank", "noopener"), true));
+  }
+  if((j.confidence || "low") !== "high"){
+    acts.appendChild(mkBtn("Скопировать для переоценки",
+      (e) => copyText(rescorePrompt(j), e.target, "Скопировано ✓"), true));
+  }
+  body.appendChild(acts);
+
+  el.append(head, body);
+  return el;
+}
+function mkBtn(label, fn, ghost){
+  const b = document.createElement("button");
+  b.className = "btn small" + (ghost ? " ghost" : "");
+  b.textContent = label; b.onclick = fn; return b;
+}
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+async function setStatus(id, st){
+  const j = S.jobs.find(x => x.id === id);
+  if(!j) return;
+  const next = (j.status === st && st !== "hidden") ? "saved" : st;
+  const wasApplyingBefore = j.statusLog.some(e => e.status === "applying");
+
+  if(next !== j.status && next !== "hidden"){
+    j.statusLog.push({status: next, at: Date.now()});
+  }
+  j.status = next;
+
+  if(next === "applying" && !wasApplyingBefore){
+    const d = driveUrl();
+    if(d) window.open(d, "_blank", "noopener");
+  }
+  selected.delete(id);
+  await save(); render();
+}
+async function saveNote(id, text){
+  const j = S.jobs.find(x => x.id === id);
+  if(!j || j.note === text) return;
+  j.note = text;
+  await save();
+}
+async function bulkSetStatus(st){
+  let openedDrive = false;
+  S.jobs.forEach(j => {
+    if(!selected.has(j.id)) return;
+    const wasApplyingBefore = j.statusLog.some(e => e.status === "applying");
+
+    if(st !== j.status && st !== "hidden"){
+      j.statusLog.push({status: st, at: Date.now()});
+    }
+    j.status = st;
+
+    if(st === "applying" && !wasApplyingBefore && !openedDrive){
+      const d = driveUrl();
+      if(d){ window.open(d, "_blank", "noopener"); openedDrive = true; }
+    }
+  });
+  selected.clear();
+  await save(); render();
+}
+
+function fill(id, list, ctx){
+  const box = document.getElementById(id);
+  box.innerHTML = "";
+  if(!list.length){
+    const e = document.createElement("div");
+    e.className = "empty";
+    e.innerHTML = ctx === "short"
+      ? "<b>Шортлист пуст</b>Нажми «В шортлист» на любой вакансии, и она появится здесь со статусами."
+      : "<b>Здесь пусто</b>Вставь JSON, который вернул чат проекта, и нажми «Импортировать».";
+    box.appendChild(e);
+    return;
+  }
+  list.forEach(j => box.appendChild(jobRow(j, ctx)));
+}
+
+function render(){
+  const live = S.jobs.filter(j => j.status !== "hidden");
+  const queue = live.filter(j => j.status === "new");
+  const short = live.filter(j => ["saved","applying","applied","interview","rejected","closed"].includes(j.status));
+  const strong = queue.filter(j => j.fit >= 70).length;
+
+  document.getElementById("heroCount").textContent = queue.length;
+  document.getElementById("heroNote").innerHTML = queue.length
+    ? "вакансий ждут разбора, из них <b>" + strong + "</b> с совпадением от 70."
+    : "Пока пусто. Вставь JSON, который выдал чат проекта, во «Входящих».";
+
+  document.getElementById("pInbox").textContent = queue.length;
+  document.getElementById("pShort").textContent = short.length;
+  document.getElementById("pCos").textContent = S.companies.length;
+  document.getElementById("pSkillCount").textContent =
+    S.profile.skills.split(",").map(s => s.trim()).filter(Boolean).length;
+  document.getElementById("brandWho").textContent = S.profile.name + ", " + (S.profile.location.split(";")[0] || "");
+
+  const q = (document.getElementById("inboxSearch")?.value || "");
+  const minFit = parseInt(document.getElementById("inboxMinFit")?.value, 10);
+  const byMin = Number.isFinite(minFit) ? queue.filter(j => j.fit >= minFit) : queue;
+  const inboxCo = fillCompanyOptions("inboxCompany", byMin);
+  const shown = byMin.filter(j => matches(j, q) && (!inboxCo || j.company === inboxCo));
+  document.getElementById("inboxCount").textContent = shown.length + " из " + queue.length + " показано";
+
+  const bulkBox = document.getElementById("inboxBulk");
+  bulkBox.innerHTML = "";
+  if(selected.size){
+    const bar = document.createElement("div");
+    bar.className = "bulkbar";
+    bar.innerHTML = "<b>Выбрано: " + selected.size + "</b>";
+    bar.appendChild(mkBtn("В шортлист", () => bulkSetStatus("saved")));
+    bar.appendChild(mkBtn("Скрыть", () => bulkSetStatus("hidden"), true));
+    bar.appendChild(mkBtn("Снять выделение", () => { selected.clear(); render(); }, true));
+    bulkBox.appendChild(bar);
+  }
+
+  renderStatusSeg();
+  const sq = (document.getElementById("shortSearch")?.value || "");
+  const shortMinFit = parseInt(document.getElementById("shortMinFit")?.value, 10);
+  const byStatus = shortStatusFilter ? short.filter(j => j.status === shortStatusFilter) : short;
+  const byShortMin = Number.isFinite(shortMinFit) ? byStatus.filter(j => j.fit >= shortMinFit) : byStatus;
+  const shortCo = fillCompanyOptions("shortCompany", byShortMin);
+  const shortShown = byShortMin.filter(j => matches(j, sq) && (!shortCo || j.company === shortCo));
+  fill("inboxList", shown.slice().sort((a,b) => b.fit - a.fit), "inbox");
+  fill("shortList", shortShown.sort((a,b) => b.fit - a.fit), "short");
+
+  document.getElementById("coList").innerHTML = S.companies.map((c,i) =>
+    '<span class="co">' + esc(c) + '<button onclick="delCo(' + i + ')" aria-label="Убрать ' + esc(c) + '">×</button></span>'
+  ).join("");
+
+  renderLinksEditor();
+  renderHubLinks();
+
+  document.getElementById("foot").textContent = base()
+    ? "Синхронизация с бэкендом: " + syncState + ". Данные доступны на всех устройствах, где вписан тот же адрес."
+    : "Данные пока только в этом браузере. Впиши адрес бэкенда в профиле, чтобы видеть их с телефона и айпада.";
+}
+
+/* ---------------- nav ---------------- */
+const VIEWS = [["hub","Главная"],["inbox","Входящие"],["shortlist","Шортлист"],["profile","Профиль"],["companies","Компании"]];
+function go(v){
+  VIEWS.forEach(([id]) => document.getElementById("v-" + id).classList.toggle("hidden", id !== v));
+  document.querySelectorAll("#crumbs .crumb").forEach(b =>
+    b.setAttribute("aria-current", b.dataset.v === v ? "page" : "false"));
+  try{ window.scrollTo(0, 0); }catch(e){}
+}
+function buildNav(){
+  document.getElementById("crumbs").innerHTML = VIEWS.map(([id,label]) =>
+    '<button class="crumb" data-v="' + id + '" onclick="go(\'' + id + '\')">' + label + '</button>').join("");
+}
+
+/* ---------------- inbox ---------------- */
+function setErr(id, msg){
+  document.getElementById(id).innerHTML = msg ? '<div class="err">' + esc(msg) + '</div>' : "";
+}
+function logTo(id, msg){
+  const el = document.getElementById(id);
+  el.classList.remove("hidden");
+  el.textContent += msg + "\n";
+  el.scrollTop = el.scrollHeight;
+}
+function setImportSource(src){
+  importSource = src;
+  document.getElementById("srcMail").setAttribute("aria-pressed", src === "mail" ? "true" : "false");
+  document.getElementById("srcWeb").setAttribute("aria-pressed", src === "web" ? "true" : "false");
+}
+function setShortStatusFilter(st){ shortStatusFilter = st; render(); }
+function renderStatusSeg(){
+  const seg = document.getElementById("shortStatusSeg");
+  if(!seg) return;
+  const opts = [["","Все"],["saved","Сохранено"],["applying","Подаюсь"],["applied","Подана"],["interview","Интервью"],["rejected","Отказ"],["closed","Закрыта"]];
+  seg.innerHTML = opts.map(([v,label]) =>
+    '<button aria-pressed="' + (shortStatusFilter === v ? "true" : "false") +
+    '" onclick="setShortStatusFilter(\'' + v + '\')">' + label + '</button>').join("");
+}
+
+async function importJSON(){
+  setErr("inboxErr","");
+  const raw = document.getElementById("pasteBox").value.trim();
+  if(!raw){ setErr("inboxErr","Поле пустое. Вставь JSON-массив, который выдал чат."); return; }
+
+  let data = null;
+  try{ data = JSON.parse(raw.replace(/```json/gi,"").replace(/```/g,"").trim()); }
+  catch(e){ data = parseJSON(raw); }
+
+  // Полная резервная копия — восстанавливаем состояние целиком.
+  if(data && !Array.isArray(data) && Array.isArray(data.jobs)){
+    S = {...S, ...data};
+    await save(); loadProfileForm(); render();
+    logTo("inboxLog", "Копия восстановлена: вакансий " + S.jobs.length + ".");
+    document.getElementById("pasteBox").value = "";
+    return;
+  }
+
+  const list = Array.isArray(data) ? data : [];
+  if(!list.length){
+    setErr("inboxErr","Это не похоже ни на массив вакансий, ни на резервную копию.");
+    return;
+  }
+  const r = addJobs(list, importSource);
+  await save(); render();
+  logTo("inboxLog", "Импорт: получено " + list.length + ", новых " + r.added +
+        ", переоценено " + r.updated +
+        ", дублей " + (list.length - r.added - r.updated) + ".");
+  document.getElementById("pasteBox").value = "";
+}
+function clearPaste(){ document.getElementById("pasteBox").value = ""; setErr("inboxErr",""); }
+function copyAllForRescore(btn){
+  const active = S.jobs.filter(j => j.status !== "hidden" && j.status !== "closed" && j.status !== "rejected");
+  if(!active.length){
+    btn.textContent = "Нечего копировать";
+    setTimeout(() => { btn.textContent = "Скопировать список для переоценки"; }, 1600);
+    return;
+  }
+  const payload = active.map(j => ({
+    title: j.title, company: j.company, location: j.location, url: j.url,
+    deadline: j.deadline, salary: j.salary, status: j.status,
+    fit: j.fit, confidence: j.confidence, why: j.why, have: j.have, gaps: j.gaps
+  }));
+  const text =
+    "Вот вакансии, которые я сейчас отслеживаю (поле status — моя пометка, не трогай его, " +
+    "кроме случая ниже). Пересчитай fit, confidence, why, have и gaps по правилам проекта — " +
+    "могло измениться то, что известно, или пройти дедлайн. Если по вакансии видно, что набор " +
+    "закрыт, верни для неё \"status\": \"closed\" вместо остальных полей оценки. " +
+    "Верни JSON-массив в том же формате, с теми же title, company и url.\n\n" +
+    JSON.stringify(payload, null, 2);
+  copyText(text, btn, "Скопировано ✓");
+}
+
+/* ---------------- profile & companies ---------------- */
+const FIELDS = {name:"pName", roles:"pRoles", location:"pLoc", intake:"pIntake",
+                skills:"pSkills", education:"pEdu", avoid:"pAvoid", backend:"pBackend"};
+function $(id){ return document.getElementById(id); }
+function loadProfileForm(){
+  for(const [key, id] of Object.entries(FIELDS)){
+    const el = $(id);
+    if(el) el.value = S.profile[key] || "";
+  }
+}
+async function saveProfile(){
+  const next = {};
+  for(const [key, id] of Object.entries(FIELDS)){
+    const el = $(id);
+    next[key] = el ? el.value.trim() : (S.profile[key] || "");
+  }
+  if(!next.name) next.name = "Профиль";
+  S.profile = next;
+  await save(); render();
+  const n = document.getElementById("profSaved");
+  n.textContent = "Сохранено";
+  setTimeout(() => n.textContent = "", 2000);
+}
+function exportBackup(){
+  const stamp = new Date().toISOString().slice(0,10);
+  const blob = new Blob([JSON.stringify(S, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "vacancy-hub-" + stamp + ".json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function splitCos(v){
+  return v.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+}
+async function addCompanies(){
+  const list = splitCos(document.getElementById("coAdd").value);
+  const have = new Set(S.companies.map(c => c.toLowerCase()));
+  list.forEach(c => { if(!have.has(c.toLowerCase())){ S.companies.push(c); have.add(c.toLowerCase()); } });
+  document.getElementById("coAdd").value = "";
+  await save(); render();
+}
+async function replaceCompanies(){
+  const list = splitCos(document.getElementById("coAdd").value);
+  if(!list.length) return;
+  S.companies = list;
+  document.getElementById("coAdd").value = "";
+  await save(); render();
+}
+async function delCo(i){ S.companies.splice(i,1); await save(); render(); }
+function copyCompanyPrompt(btn){
+  const text = "Проверь актуальные вакансии на официальных сайтах этих компаний, " +
+    "по правилам проекта: " + S.companies.join(", ") + ".";
+  copyText(text, btn, "Скопировано ✓");
+}
+
+/* ---------------- quick links ---------------- */
+function renderLinksEditor(){
+  const box = document.getElementById("linksEditor");
+  if(!box) return;
+  box.innerHTML = "";
+  S.links.forEach((l, i) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;gap:8px;margin-bottom:8px;align-items:center;flex-wrap:wrap";
+
+    const nameInput = document.createElement("input");
+    nameInput.value = l.label;
+    nameInput.placeholder = "Название";
+    nameInput.style.maxWidth = "220px";
+    nameInput.onblur = async () => {
+      l.label = nameInput.value.trim() || l.label;
+      await save(); render();
+    };
+
+    const urlInput = document.createElement("input");
+    urlInput.value = l.url;
+    urlInput.placeholder = "https://…";
+    urlInput.style.flex = "1 1 220px";
+    urlInput.onblur = async () => {
+      l.url = urlInput.value.trim();
+      await save(); render();
+    };
+
+    const del = document.createElement("button");
+    del.className = "btn ghost small";
+    del.textContent = "Убрать";
+    del.onclick = async () => { S.links.splice(i, 1); await save(); render(); };
+
+    row.append(nameInput, urlInput, del);
+    box.appendChild(row);
+  });
+}
+async function addLink(){
+  S.links.push({label: "", url: ""});
+  await save(); render();
+  const rows = document.getElementById("linksEditor").children;
+  rows[rows.length - 1]?.querySelector("input")?.focus();
+}
+function renderHubLinks(){
+  const box = document.getElementById("hubLinks");
+  if(!box) return;
+  const active = S.links.filter(l => l.url);
+  box.style.display = active.length ? "flex" : "none";
+  box.innerHTML = "";
+  active.forEach(l => {
+    const b = document.createElement("button");
+    b.className = "btn ghost small";
+    b.textContent = l.label || l.url;
+    b.onclick = () => window.open(l.url, "_blank", "noopener");
+    box.appendChild(b);
+  });
+}
+
+/* ---------------- boot ---------------- */
+(async function(){
+  try{
+    buildNav();
+    await load();
+    loadProfileForm();
+    render();
+    go("hub");
+  }catch(e){
+    console.error(e);
+    document.querySelector(".wrap").insertAdjacentHTML("afterbegin",
+      '<div class="err" style="margin:24px 0">Запуск прервался: ' + esc(e.message) +
+      '. Открой консоль браузера — там полная трассировка.</div>');
+  }
+})();
+</script>
+</body>
+</html>
