@@ -294,6 +294,7 @@ label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:5px}
     <span style="font-size:13px;color:var(--ink-soft)">Пометить как:</span>
     <div class="seg" role="group" aria-label="Метка источника при импорте">
       <button id="srcMail" aria-pressed="true" onclick="setImportSource('mail')">Почта</button>
+      <button id="srcTg" aria-pressed="false" onclick="setImportSource('telegram')">Telegram</button>
       <button id="srcWeb" aria-pressed="false" onclick="setImportSource('web')">Веб-поиск</button>
     </div>
   </div>
@@ -311,12 +312,19 @@ label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:5px}
     в чат проекта, получишь обновлённый JSON, импортируй его обратно сюда же.
   </p>
 
+  <div class="bar">
+    <span style="font-size:13px;color:var(--ink-soft)">Уверенность:</span>
+    <div class="seg" id="inboxConfSeg" role="group" aria-label="Фильтр по уверенности"></div>
+  </div>
   <div class="filter-bar">
     <div class="search">
       <input id="inboxSearch" placeholder="Фильтр по названию…" oninput="render()">
     </div>
     <select id="inboxCompany" onchange="render()">
       <option value="">Все компании</option>
+    </select>
+    <select id="inboxPlatform" onchange="render()">
+      <option value="">Все платформы</option>
     </select>
     <input id="inboxMinFit" type="number" min="0" max="100" placeholder="Мин. скор"
            style="max-width:110px" oninput="render()">
@@ -336,12 +344,19 @@ label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:5px}
     <span style="font-size:13px;color:var(--ink-soft)">Статус:</span>
     <div class="seg" id="shortStatusSeg" role="group" aria-label="Фильтр по статусу"></div>
   </div>
+  <div class="bar">
+    <span style="font-size:13px;color:var(--ink-soft)">Уверенность:</span>
+    <div class="seg" id="shortConfSeg" role="group" aria-label="Фильтр по уверенности"></div>
+  </div>
   <div class="filter-bar">
     <div class="search">
       <input id="shortSearch" placeholder="Фильтр по названию…" oninput="render()">
     </div>
     <select id="shortCompany" onchange="render()">
       <option value="">Все компании</option>
+    </select>
+    <select id="shortPlatform" onchange="render()">
+      <option value="">Все платформы</option>
     </select>
     <input id="shortMinFit" type="number" min="0" max="100" placeholder="Мин. скор"
            style="max-width:110px" oninput="render()">
@@ -521,6 +536,8 @@ let importSource = "mail";
 let expanded = new Set();
 let selected = new Set();
 let shortStatusFilter = ""; // "" — все статусы
+let inboxConfFilter = ""; // "" — вся уверенность
+let shortConfFilter = "";
 
 /* ---------------- storage ---------------- */
 let syncState = "local";
@@ -678,10 +695,12 @@ function addJobs(list, source){
       have: Array.isArray(raw.have) ? raw.have.slice(0,3) : [],
       gaps: Array.isArray(raw.gaps) ? raw.gaps.slice(0,3) : []
     };
+    const platform = raw.platform ? String(raw.platform).slice(0,60) : "";
     const j = {
       id: "j" + Date.now() + Math.random().toString(36).slice(2,7),
       title: String(raw.title).slice(0,140),
       company: String(raw.company).slice(0,80),
+      platform,
       note: "", statusLog: [{status: "new", at: Date.now()}],
       ...fields,
       source, status: "new", found: Date.now()
@@ -691,6 +710,12 @@ function addJobs(list, source){
 
     if(existing){
       let touched = false;
+      // Платформа «липкая»: пустой ответ на переоценку не должен стирать то,
+      // что уже было определено раньше.
+      if(platform && platform !== existing.platform){
+        existing.platform = platform;
+        touched = true;
+      }
       // Явный сигнал «вакансия закрыта» из массовой переоценки — можно ставить всегда.
       if(raw.status === "closed" && existing.status !== "closed"){
         existing.status = "closed";
@@ -727,15 +752,18 @@ function findLink(keyword){
   return l ? l.url : null;
 }
 function driveUrl(){ return findLink("диск") || findLink("drive"); }
-function fillCompanyOptions(selectId, list){
+function fillFieldOptions(selectId, list, field, allLabel){
   const el = document.getElementById(selectId);
   if(!el) return "";
   const current = el.value;
-  const names = [...new Set(list.map(j => j.company))].sort((a,b) => a.localeCompare(b, "ru"));
-  el.innerHTML = '<option value="">Все компании</option>' +
-    names.map(c => '<option' + (c === current ? ' selected' : '') + '>' + esc(c) + '</option>').join("");
-  // Если выбранная компания пропала из списка (все её вакансии скрыты) — сбрасываем на «Все».
-  return names.includes(current) ? current : "";
+  const values = [...new Set(list.map(j => j[field]).filter(Boolean))].sort((a,b) => a.localeCompare(b, "ru"));
+  el.innerHTML = '<option value="">' + allLabel + '</option>' +
+    values.map(v => '<option' + (v === current ? ' selected' : '') + '>' + esc(v) + '</option>').join("");
+  // Если выбранное значение пропало из списка (все такие вакансии скрыты) — сбрасываем на «Все».
+  return values.includes(current) ? current : "";
+}
+function fillCompanyOptions(selectId, list){
+  return fillFieldOptions(selectId, list, "company", "Все компании");
 }
 
 /* ---------------- rendering ---------------- */
@@ -795,7 +823,10 @@ function jobRow(j, ctx){
   meta.innerHTML = bits.join(" — ") +
     (j.deadline ? ' <span class="pill urgent">до ' + esc(j.deadline) + '</span>' : '') +
     ' <span class="pill conf-' + conf + '">' + confLabel + '</span>' +
-    ' <span class="pill src">' + (j.source === "mail" ? "из почты" : "найдено в сети") + '</span>';
+    (j.platform ? ' <span class="pill">' + esc(j.platform) + '</span>' : '') +
+    ' <span class="pill src">' +
+      (j.source === "mail" ? "из почты" : j.source === "telegram" ? "из Telegram" : "найдено в сети") +
+    '</span>';
   mid.appendChild(meta);
 
   const chev = document.createElement("button");
@@ -965,7 +996,11 @@ function render(){
   const minFit = parseInt(document.getElementById("inboxMinFit")?.value, 10);
   const byMin = Number.isFinite(minFit) ? queue.filter(j => j.fit >= minFit) : queue;
   const inboxCo = fillCompanyOptions("inboxCompany", byMin);
-  const shown = byMin.filter(j => matches(j, q) && (!inboxCo || j.company === inboxCo));
+  const inboxPl = fillFieldOptions("inboxPlatform", byMin, "platform", "Все платформы");
+  renderConfSeg("inboxConfSeg", inboxConfFilter, "setInboxConfFilter");
+  const shown = byMin.filter(j => matches(j, q) &&
+    (!inboxCo || j.company === inboxCo) && (!inboxPl || j.platform === inboxPl) &&
+    (!inboxConfFilter || j.confidence === inboxConfFilter));
   document.getElementById("inboxCount").textContent = shown.length + " из " + queue.length + " показано";
 
   const bulkBox = document.getElementById("inboxBulk");
@@ -981,12 +1016,16 @@ function render(){
   }
 
   renderStatusSeg();
+  renderConfSeg("shortConfSeg", shortConfFilter, "setShortConfFilter");
   const sq = (document.getElementById("shortSearch")?.value || "");
   const shortMinFit = parseInt(document.getElementById("shortMinFit")?.value, 10);
   const byStatus = shortStatusFilter ? short.filter(j => j.status === shortStatusFilter) : short;
   const byShortMin = Number.isFinite(shortMinFit) ? byStatus.filter(j => j.fit >= shortMinFit) : byStatus;
   const shortCo = fillCompanyOptions("shortCompany", byShortMin);
-  const shortShown = byShortMin.filter(j => matches(j, sq) && (!shortCo || j.company === shortCo));
+  const shortPl = fillFieldOptions("shortPlatform", byShortMin, "platform", "Все платформы");
+  const shortShown = byShortMin.filter(j => matches(j, sq) &&
+    (!shortCo || j.company === shortCo) && (!shortPl || j.platform === shortPl) &&
+    (!shortConfFilter || j.confidence === shortConfFilter));
   fill("inboxList", shown.slice().sort((a,b) => b.fit - a.fit), "inbox");
   fill("shortList", shortShown.sort((a,b) => b.fit - a.fit), "short");
 
@@ -1028,6 +1067,7 @@ function logTo(id, msg){
 function setImportSource(src){
   importSource = src;
   document.getElementById("srcMail").setAttribute("aria-pressed", src === "mail" ? "true" : "false");
+  document.getElementById("srcTg").setAttribute("aria-pressed", src === "telegram" ? "true" : "false");
   document.getElementById("srcWeb").setAttribute("aria-pressed", src === "web" ? "true" : "false");
 }
 function setShortStatusFilter(st){ shortStatusFilter = st; render(); }
@@ -1038,6 +1078,16 @@ function renderStatusSeg(){
   seg.innerHTML = opts.map(([v,label]) =>
     '<button aria-pressed="' + (shortStatusFilter === v ? "true" : "false") +
     '" onclick="setShortStatusFilter(\'' + v + '\')">' + label + '</button>').join("");
+}
+function setInboxConfFilter(v){ inboxConfFilter = v; render(); }
+function setShortConfFilter(v){ shortConfFilter = v; render(); }
+function renderConfSeg(containerId, current, setterName){
+  const seg = document.getElementById(containerId);
+  if(!seg) return;
+  const opts = [["","Все"],["low","Только из письма"],["medium","Частично"],["high","По описанию"]];
+  seg.innerHTML = opts.map(([v,label]) =>
+    '<button aria-pressed="' + (current === v ? "true" : "false") +
+    '" onclick="' + setterName + '(\'' + v + '\')">' + label + '</button>').join("");
 }
 
 async function importJSON(){
