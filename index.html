@@ -328,6 +328,8 @@ label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:5px}
     </select>
     <input id="inboxMinFit" type="number" min="0" max="100" placeholder="Мин. скор"
            style="max-width:110px" oninput="render()">
+    <input id="inboxSkills" placeholder="Навыки: SQL, Python, статистика…"
+           style="min-width:220px" oninput="render()">
   </div>
   <div style="font-size:13px;color:var(--ink-soft);margin:-4px 0 14px" id="inboxCount"></div>
   <div id="inboxBulk"></div>
@@ -747,6 +749,12 @@ function matches(j, q){
   const s = (j.title + " " + j.company).toLowerCase();
   return s.includes(q.trim().toLowerCase());
 }
+function matchesSkills(j, raw){
+  const terms = (raw || "").split(",").map(t => t.trim().toLowerCase()).filter(Boolean);
+  if(!terms.length) return true;
+  const hay = (j.title + " " + (j.have||[]).join(" ") + " " + (j.gaps||[]).join(" ") + " " + (j.why||"")).toLowerCase();
+  return terms.some(t => hay.includes(t));
+}
 function findLink(keyword){
   const l = S.links.find(x => x.url && x.label.toLowerCase().includes(keyword));
   return l ? l.url : null;
@@ -993,12 +1001,13 @@ function render(){
   document.getElementById("brandWho").textContent = S.profile.name + ", " + (S.profile.location.split(";")[0] || "");
 
   const q = (document.getElementById("inboxSearch")?.value || "");
+  const skillsQ = (document.getElementById("inboxSkills")?.value || "");
   const minFit = parseInt(document.getElementById("inboxMinFit")?.value, 10);
   const byMin = Number.isFinite(minFit) ? queue.filter(j => j.fit >= minFit) : queue;
   const inboxCo = fillCompanyOptions("inboxCompany", byMin);
   const inboxPl = fillFieldOptions("inboxPlatform", byMin, "platform", "Все платформы");
   renderConfSeg("inboxConfSeg", inboxConfFilter, "setInboxConfFilter");
-  const shown = byMin.filter(j => matches(j, q) &&
+  const shown = byMin.filter(j => matches(j, q) && matchesSkills(j, skillsQ) &&
     (!inboxCo || j.company === inboxCo) && (!inboxPl || j.platform === inboxPl) &&
     (!inboxConfFilter || j.confidence === inboxConfFilter));
   document.getElementById("inboxCount").textContent = shown.length + " из " + queue.length + " показано";
